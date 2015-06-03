@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+  	<head>
+	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	    <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+		<script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.css"/>
+	    <link rel="stylesheet" href="http://cdn.kendostatic.com/2014.1.318/styles/kendo.common.min.css"/>
+	    <style>
+	    	ul {
+	    		-webkit-padding-start: 0px;
+	    		list-style: none;
+	    	}
+	    	h1, li {
+	    	}
+	    	#messageInput {
+	    		margin-top: 10px;
+	    	}
+	    	footer {
+	    		margin-top: 30px;
+	    	}
+
+	    </style>
+  	</head>
+  	<body ng-controller="MyController">
+  		<div class="container">
+  			<div class="row">
+  				<div class="col-sm-4 col-sm-offset-4">
+  					<h1>Firebase Chat Demo</h1>	 
+  				</div>
+  			</div>
+  			<!-- CHAT MARKUP --> 			  			
+  			<div class="row">
+  				<div class="col-sm-4 col-sm-offset-4">
+  					<!-- <div class="jumbotron"> -->
+				  		<ul id="example-messages" class="example-chat-messages">
+						  	<li ng-repeat="msg in messages">
+						    	<strong class="example-chat-username">{{ msg.from }}: </strong>
+						    	{{ msg.body }}
+						  	</li>
+						</ul>
+					<!-- </div> -->
+				</div>
+			</div>
+  			<div class="row">
+  				<div class="col-sm-4 col-sm-offset-4">
+			  		<div class="example-chat-toolbar">
+			        	<!-- <label for="nameInput">Username: </label> -->
+			        	<input ng-model="name" type="text" id="nameInput" class="form-control" placeholder="Enter a username...">
+			        	<input ng-model="msg" type="text" id="messageInput" class="form-control" placeholder="Type a message..." ng-keydown="addMessage($event)">
+			      	</div>
+				</div>
+			</div>
+			<div class="row">
+  				<div class="col-sm-4 col-sm-offset-4">
+  					<footer>
+  						<a href="https://www.firebase.com/tutorial/#tutorial/angular">AngularJS + Firebase Tutorial</a>
+  					</footer>
+  				</div>
+  			</div>
+					
+		</div>
+
+    	</div>
+	  	<script>
+	     	var myApp = angular.module("myApp", ["firebase"]);
+	      	myApp.controller("MyController", ["$scope", "$firebaseArray",
+			  	function($scope, $firebaseArray) {
+			    	//Code here
+			    	var ref = new Firebase("https://gx0yxzs32nt.firebaseio-demo.com/");
+          			$scope.messages = $firebaseArray(ref);
+
+          			//ADD MESSAGE METHOD
+		          	$scope.addMessage = function(e) {
+
+			            //LISTEN FOR RETURN KEY
+			            if (e.keyCode === 13 && $scope.msg) {
+			              	//ALLOW CUSTOM OR ANONYMOUS USER NAMES
+			              	var name = $scope.name || "anonymous";
+			              	$scope.messages.$add({ from: name, body: $scope.msg });
+			             	 //RESET MESSAGE
+			              	$scope.msg = "";
+			            }
+		          	}
+			  	}
+			]);
+	    </script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.js"></script>
+	    <script src="http://cdn.kendostatic.com/2014.1.318/js/kendo.all.min.js"></script>
+  	</body>
+</html>
